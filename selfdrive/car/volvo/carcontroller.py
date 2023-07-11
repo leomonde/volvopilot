@@ -173,8 +173,8 @@ class CarController():
           #self.SteerCommand.trqlim = -127 if current_steer_angle > self.SteerCommand.angle_request else 127
           self.SteerCommand.steer_direction = CCP.STEER
         elif fingerprint in PLATFORM.EUCD:
-          # MIGHT be needed for EUCD
-          self.SteerCommand.steer_direction = CCP.STEER_RIGHT if current_steer_angle > self.SteerCommand.angle_request else CCP.STEER_LEFT
+          # Define steer direction based on request
+          self.SteerCommand.steer_direction = CCP.STEER_LEFT if self.SteerCommand.angle_request > 0 else CCP.STEER_RIGHT
           self.SteerCommand.steer_direction = self.dir_change(self.SteerCommand.steer_direction, current_steer_angle-self.SteerCommand.angle_request) # Filter the direction change 
           
       else:
