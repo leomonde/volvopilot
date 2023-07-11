@@ -38,8 +38,9 @@ class CarInterface(CarInterfaceBase):
         ret.steerRatio = 14.7
 
     elif candidate in PLATFORM.EUCD:
-      ret.dashcamOnly = True
+      #ret.dashcamOnly = True
       #ret.safetyModel = car.CarParams.SafetyModel.volvoEUCD
+      ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.volvoEUCD)]
 
       if candidate == CAR.V60:
         ret.mass = 1750 + STD_CARGO_KG  # All data found at https://www.media.volvocars.com/global/en-gb/models/old-v60/2014/specifications
