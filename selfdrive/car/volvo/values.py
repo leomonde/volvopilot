@@ -68,7 +68,7 @@ class CarControllerParams():
   # When close to desired steering angle, don't change steer direction inside deadzone.
   # Since we need to release control of the steering wheel for a brief moment, steering wheel will 
   # unwind by itself. 
-  DEADZONE = 0.1
+  DEADZONE = 0.5
 
 
 BUTTON_STATES = {
@@ -107,20 +107,27 @@ ECU_ADDRESS = {
 # b = bytes([ord(s[a]) for a in range(len(s))]) + b'\x00' * 13
 #
 FW_VERSIONS = {
-  CAR.V40: {
-  (Ecu.unknown, ECU_ADDRESS[CAR.V40]["CEM"], None): [b'31453061 AA\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'],  # 0xf1a2
+  ##CAR.V40: {
+  ##(Ecu.unknown, ECU_ADDRESS[CAR.V40]["CEM"], None): [b'31453061 AA\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'],  # 0xf1a2
   #(Ecu.unknown, ECU_ADDRESS[CAR.V40]["CEM"], None): [b'31453132 AA\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'], # 0xf1a4
   #(Ecu.unknown, ECU_ADDRESS[CAR.V40]["CEM"], None): [b'32233863 AA\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'], # 0xf1a5
   #(Ecu.eps, ECU_ADDRESS[CAR.V40]["PSCM"], None): [b'31288595 AE\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'],           # 0xf1a2
-  (Ecu.eps, ECU_ADDRESS[CAR.V40]["PSCM"], None): [b'31288595 AE\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'],            # 0xf1a2
+  ##(Ecu.eps, ECU_ADDRESS[CAR.V40]["PSCM"], None): [b'31288595 AE\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'],            # 0xf1a2
   #(Ecu.eps, ECU_ADDRESS[CAR.V40]["PSCM"], None): [b'31678017\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'],  # 0xf1a4
   #(Ecu.eps, ECU_ADDRESS[CAR.V40]["PSCM"], None): [b'31681147 AA\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'],           # 0xf1a5
-  (Ecu.fwdCamera, ECU_ADDRESS[CAR.V40]["FSM"], None): [b'31400454 AA\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'],  # 0xf1a2
+  ##(Ecu.fwdCamera, ECU_ADDRESS[CAR.V40]["FSM"], None): [b'31400454 AA\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'],  # 0xf1a2
   #(Ecu.fwdCamera, ECU_ADDRESS[CAR.V40]["FSM"], None): [b'31660982 AA\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'], # 0xf1a4
   #(Ecu.fwdCamera, ECU_ADDRESS[CAR.V40]["FSM"], None): [b'31660983 AA\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'], # 0xf1a5
   #(Ecu.cvm, ECU_ADDRESS[CAR.V40]["CVM"], None): [b'31360093 AA\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'], # 0xf1a2 Could be used in future.
   #(Ecu.cvm, ECU_ADDRESS[CAR.V40]["CVM"], None): [b'31360888 AA\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'], # 0xf1a4 Could be used in future.
   #(Ecu.cvm, ECU_ADDRESS[CAR.V40]["CVM"], None): [b'31360340 AA\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'], # 0xf1a5 Could be used in future.
+  ##}
+  CAR.V60: {
+  #(Ecu.transmission, 0x7e1, None): [b'\xf1\xa0YV1FS49CDF2360777']
+  #(Ecu.engine, 0x7e0, None): [b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00']
+  (Ecu.unknown, 0x726, None): [b'30786853 BK\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'],
+  (Ecu.eps, 0x730, None): [b'31340673 AD\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'],
+  (Ecu.fwdCamera, 0x764, None): [b'31400454 AA\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'],
   }
 }
 
