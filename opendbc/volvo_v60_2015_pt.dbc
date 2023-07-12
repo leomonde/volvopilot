@@ -127,7 +127,8 @@ BO_ 819 PSCM0: 8 PSCM
 BO_ 923 NEW_MSG_1: 8 XXX
  SG_ NEW_SIGNAL_1 : 15|16@0+ (1,0) [0|65535] "" XXX
 
-BO_ 1021 FSM5: 8 FSM
+BO_ 1021 FSM5: 8 FSM XXX
+ SG_ TSR_Speed : 25|4@1+ (10,0) [0|15] "" XXX
 
 BO_ 1039 MiscCarInfo: 8 XXX
  SG_ TurnSignal : 33|2@0+ (1,0) [0|3] "" XXX
