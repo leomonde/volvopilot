@@ -105,6 +105,8 @@ class CarState(CarStateBase):
     ret.vEgoRaw = cp.vl["VehicleSpeed1"]['VehicleSpeed'] * CV.KPH_TO_MS
     ret.vEgo, ret.aEgo = self.update_speed_kf(ret.vEgoRaw)
     ret.standstill = ret.vEgoRaw < 0.1
+    #vp
+    ret.engineRPM = round(cp.vl["NEW_MSG_5"]['EngineRpm']/50)*50
     
      # Steering
     ret.steeringAngleDeg = cp.vl["PSCM1"]['SteeringAngleServo']
@@ -146,6 +148,9 @@ class CarState(CarStateBase):
     
     elif self.CP.carFingerprint in PLATFORM.EUCD:
       accStatus = cp_cam.vl["FSM0"]['ACCStatus']
+      #vp
+      ret.cruiseState.speedLimit = cp_cam.vl["FSM5"]['TSR_Speed'] * CV.KPH_TO_MS
+      ret.cruiseState.speed = cp_cam.vl["FSM5"]['TSR_Speed'] * CV.KPH_TO_MS
       
       if accStatus == 2:
         # Acc in ready mode
@@ -160,6 +165,10 @@ class CarState(CarStateBase):
         ret.cruiseState.available = False
         ret.cruiseState.enabled = False
 
+    #vp
+    ret.cruiseActualEnabled = ret.cruiseState.enabled
+    ret.cruiseState.available = ret.cruiseState.available
+    
     # Button and blinkers.
     self.buttonStates['altButton1'] = bool(cp.vl["CCButtons"]['ACCOnOffBtn'])
     self.buttonStates['accelCruise'] = bool(cp.vl["CCButtons"]['ACCSetBtn'])
@@ -258,6 +267,7 @@ class CarState(CarStateBase):
       ("ACCMinusBtn", "CCButtons", 0),
       ("TimeGapIncreaseBtn", "CCButtons", 0),
       ("TimeGapDecreaseBtn", "CCButtons", 0),
+      ("EngineRpm", "NEW_MSG_5", 0),
 
       # Common PSCM signals
       ("SteeringAngleServo", "PSCM1", 0),
@@ -285,7 +295,7 @@ class CarState(CarStateBase):
       ("diagCEMResp", 0),
       ("diagPSCMResp", 0),
       ("diagCVMResp", 0),
-
+      ("NEW_MSG_5", 50),
     ]
 
     # Car specific signals
@@ -388,6 +398,8 @@ class CarState(CarStateBase):
     elif CP.carFingerprint in PLATFORM.EUCD:
       # ACC Status
       signals.append(("ACCStatus", "FSM0", 0))
+      #vp
+      signals.append(("TSR_Speed", "FSM5", 0))
 
       # LKA Request
       signals.append(("TrqLim", "FSM2", 0x80))
@@ -402,6 +414,8 @@ class CarState(CarStateBase):
       # Checks
       checks.append(('FSM0', 100))
       checks.append(('FSM2', 50))
+      #vp
+      checks.append(("FSM5", 10))
 
 
     return CANParser(DBC[CP.carFingerprint]['pt'], signals, checks, 2)
