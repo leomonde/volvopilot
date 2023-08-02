@@ -17,7 +17,7 @@ CONTROL_N = 17
 CAR_ROTATION_RADIUS = 0.0
 
 # EU guidelines
-MAX_LATERAL_JERK = 5.0
+MAX_LATERAL_JERK = 10
 
 CRUISE_LONG_PRESS = 50
 CRUISE_NEAREST_FUNC = {
@@ -105,9 +105,9 @@ def initialize_v_cruise(v_ego, buttonEvents, v_cruise_last):
 
 def get_lag_adjusted_curvature(CP, v_ego, psis, curvatures, curvature_rates):
   if len(psis) != CONTROL_N:
-    psis = [0.0 for i in range(CONTROL_N)]
-    curvatures = [0.0 for i in range(CONTROL_N)]
-    curvature_rates = [0.0 for i in range(CONTROL_N)]
+    psis = [0.0]*CONTROL_N
+    curvatures = [0.0]*CONTROL_N
+    curvature_rates = [0.0]*CONTROL_N
 
   # TODO this needs more thought, use .2s extra for now to estimate other delays
   delay = CP.steerActuatorDelay + .2
@@ -118,14 +118,16 @@ def get_lag_adjusted_curvature(CP, v_ego, psis, curvatures, curvature_rates):
   # MPC can plan to turn the wheel and turn back before t_delay. This means
   # in high delay cases some corrections never even get commanded. So just use
   # psi to calculate a simple linearization of desired curvature
-  curvature_diff_from_psi = psi / (max(v_ego, 1e-1) * delay) - current_curvature
-  desired_curvature = current_curvature + 2 * curvature_diff_from_psi
+  average_curvature_desired = psi / (max(v_ego, 1) * delay)
+  current_curvature_desired = curvatures[0]
+  desired_curvature = 2 * average_curvature_desired - current_curvature_desired
 
   max_curvature_rate = MAX_LATERAL_JERK / (max(v_ego, 1e-1) * 2)
   safe_desired_curvature_rate = clip(desired_curvature_rate,
                                           -max_curvature_rate,
                                           max_curvature_rate)
   safe_desired_curvature = clip(desired_curvature,
-                                     current_curvature - max_curvature_rate * DT_MDL,
-                                     current_curvature + max_curvature_rate * DT_MDL)
+                                     current_curvature_desired - max_curvature_rate * DT_MDL,
+                                     current_curvature_desired + max_curvature_rate * DT_MDL)
+  
   return safe_desired_curvature, safe_desired_curvature_rate
