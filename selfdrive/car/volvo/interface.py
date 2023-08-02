@@ -100,6 +100,9 @@ class CarInterface(CarInterfaceBase):
     ret.cruiseState.enabled = common_interface_atl(ret, dragonconf.dpAtl)
     ret.canValid = self.cp.can_valid and self.cp_cam.can_valid
 
+    #vp
+    ret.steeringRateLimited = self.CC.steer_rate_limited
+
     # Check for and process state-change events (button press or release) from
     # the turn stalk switch or ACC steering wheel/control stalk buttons.
     for button in self.CS.buttonStates:
