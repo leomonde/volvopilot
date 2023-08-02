@@ -32,13 +32,13 @@ if [ `wc -l < /tmp/rec_list.tmp` -ge 3 ]
    date --set $last_day" "$last_time
 fi
 
-# Clean oldest recording day if disk space is less than 20GB
+# Clean oldest recording day if disk space is less than 10GB
 
 df -h | grep "/data" | awk '{print $4}' > /tmp/part_space.tmp
 space=`sed -e 's/G//' /tmp/part_space.tmp`
 # rm /tmp/part_space.tmp
 
-if [ $space -lt 20 ]
+if [ $space -lt 10 ]
 then
  old_day=`sed -n '1p' /tmp/rec_list.tmp | awk -F"--" '{print $1}'`
  for file in `ls /data/media/0/realdata/ | grep $old_day`
