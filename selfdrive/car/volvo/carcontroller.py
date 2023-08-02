@@ -10,7 +10,6 @@ class SteerCommand:
   steer_direction = 0
   trqlim = 0
 
-
 class CarController():
   def __init__(self, dbc_name, CP, VW):
     # dp
@@ -75,7 +74,9 @@ class CarController():
     self.CP = CP
     self.packer = CANPacker(DBC[CP.carFingerprint]['pt'])
 
-
+    #vp
+    self.steer_rate_limited = False
+    
   def max_angle_req(self, current_steer_angle, angle_request_prev, CCP):
     """ 
     Calculate maximum angle request delta/offset from current steering angle. 
@@ -185,7 +186,6 @@ class CarController():
         else:
           self.SteerCommand.angle_request = 0
 
-      
       # Count no of consequtive samples of zero torque by lka.
       # Try to recover, blocking steering request for 2 seconds.
       if fingerprint in PLATFORM.C1:
