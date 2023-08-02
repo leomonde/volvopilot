@@ -208,6 +208,10 @@ struct CarState {
   cruiseActualEnabled @41 :Bool;
   distanceLines @42 :UInt8;
 
+  #vp
+  acctracking @43 : UInt8;
+  accpause @44 :Bool;
+
   struct WheelSpeeds {
     # optional wheel speeds
     fl @0 :Float32;
