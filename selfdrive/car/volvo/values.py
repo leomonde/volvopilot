@@ -68,8 +68,7 @@ class CarControllerParams():
   # When close to desired steering angle, don't change steer direction inside deadzone.
   # Since we need to release control of the steering wheel for a brief moment, steering wheel will 
   # unwind by itself. 
-  DEADZONE = 0.5
-
+  DEADZONE = 0.2
 
 BUTTON_STATES = {
   "altButton1": False, # On/Off button
@@ -80,7 +79,6 @@ BUTTON_STATES = {
   "decelCruise": False,
   "gapAdjustCruise": False,
 }   
-
 
 class CAR:
   V40 = "VOLVO V40 2017"
@@ -123,8 +121,7 @@ FW_VERSIONS = {
   #(Ecu.cvm, ECU_ADDRESS[CAR.V40]["CVM"], None): [b'31360340 AA\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'], # 0xf1a5 Could be used in future.
   ##}
   CAR.V60: {
-  #(Ecu.transmission, 0x7e1, None): [b'\xf1\xa0YV1FS49CDF2360777']
-  #(Ecu.engine, 0x7e0, None): [b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00']
+  (Ecu.engine, 0x7e0, None): [b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'],
   (Ecu.unknown, 0x726, None): [b'30786853 BK\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'],
   (Ecu.eps, 0x730, None): [b'31340673 AD\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'],
   (Ecu.fwdCamera, 0x764, None): [b'31400454 AA\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'],
@@ -137,7 +134,6 @@ FW_VERSIONS = {
 # <car.capnp:CarParams.CarFw builder (ecu = unknown, fwVersion = "31453061 AA\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00", address = 1830, subAddress = 0)>, 
 # <car.capnp:CarParams.CarFw builder (ecu = fwdCamera, fwVersion = "31400454 AA\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00", address = 1892, subAddress = 0)>]
 
-
 FINGERPRINTS = {
   CAR.V40: [
     # V40 2017
@@ -149,9 +145,9 @@ FINGERPRINTS = {
 ],
   CAR.V60: [
     {0: 8, 16: 8, 32: 8, 81: 8, 99: 8, 104: 8, 112: 8, 144: 8, 277: 8, 295: 8, 298: 8, 307: 8, 320: 8, 328: 8, 336: 8, 343: 8, 352: 8, 359: 8, 384: 8, 465: 8, 511: 8, 522: 8, 544: 8, 565: 8, 582: 8, 608: 8, 609: 8, 610: 8, 612: 8, 613: 8, 624: 8, 626: 8, 635: 8, 648: 8, 665: 8, 673: 8, 704: 8, 706: 8, 708: 8, 750: 8, 751: 8, 778: 8, 788: 8, 794: 8, 797: 8, 802: 8, 803: 8, 805: 8, 807: 8, 819: 8, 820: 8, 821: 8, 913: 8, 923: 8, 978: 8, 979: 8, 1006: 8, 1021: 8, 1024: 8, 1029: 8, 1039: 8, 1042: 8, 1045: 8, 1137: 8, 1141: 8, 1152: 8, 1174: 8, 1187: 8, 1198: 8, 1214: 8, 1217: 8, 1226: 8, 1240: 8, 1409: 8},
+    {16: 8, 32: 8, 81: 8, 99: 8, 104: 8, 112: 8, 144: 8, 277: 8, 295: 8, 298: 8, 307: 8, 308: 8, 320: 8, 328: 8, 336: 8, 343: 8, 352: 8, 359: 8, 384: 8, 465: 8, 511: 8, 522: 8, 544: 8, 565: 8, 582: 8, 608: 8, 609: 8, 610: 8, 612: 8, 613: 8, 624: 8, 626: 8, 635: 8, 648: 8, 665: 8, 673: 8, 704: 8, 706: 8, 708: 8, 750: 8, 751: 8, 778: 8, 788: 8, 794: 8, 797: 8, 802: 8, 803: 8, 805: 8, 807: 8, 819: 8, 820: 8, 821: 8, 913: 8, 923: 8, 978: 8, 979: 8, 1006: 8, 1021: 8, 1024: 8, 1029: 8, 1039: 8, 1042: 8, 1045: 8, 1137: 8, 1141: 8, 1152: 8, 1174: 8, 1187: 8, 1198: 8, 1214: 8, 1217: 8, 1226: 8, 1240: 8, 1409: 8},
   ],
 }
-
 
 DBC = {
   # dbc_dict( powertrain_dbc, radar_dbc )
