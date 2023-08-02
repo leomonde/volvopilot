@@ -30,6 +30,11 @@ class PSCMInfo():
     # EUCD
     self.SteeringWheelRateOfChange = 0
 
+     #vp
+     self.accStatus = 0
+     self.accpause = 0
+     self.acctracking = 0
+
 class FSMInfo():
   def __init__(self):
     # Common
@@ -166,8 +171,16 @@ class CarState(CarStateBase):
         ret.cruiseState.enabled = False
 
     #vp
+    ret.cruiseState.speed = cp_cam.vl["FSM5"]['TSR_Speed'] * CV.KPH_TO_MS
     ret.cruiseActualEnabled = ret.cruiseState.enabled
-    ret.cruiseState.available = ret.cruiseState.available
+    ret.accpause = bool(cp_cam.vl["FSM3"]['ACC_Pause'])
+    ret.acctracking = int(cp_cam.vl["FSM1"]['ACC_Tracking'])
+
+    # Alert during traffic jam when car ahead is moving TODO
+    if ret.cruiseState.enabled and ret.accpause and ret.vEgo < 0.1 and ret.acctracking > 4:
+      print("VP_DEBUG"," Cruise State=",ret.cruiseState.enabled," ACC Pause=",ret.accpause," Speed=",ret.vEgo," ACC Distance=",ret.acctracking)
+      #events.add(EventName.promptDriverDistracted)
+      #cloudlog.warning("TEST")
     
     # Button and blinkers.
     self.buttonStates['altButton1'] = bool(cp.vl["CCButtons"]['ACCOnOffBtn'])
@@ -324,7 +337,9 @@ class CarState(CarStateBase):
       # Gas / Brake
       signals.append(("AccPedal", "AccPedal", 0))
       signals.append(("BrakePedal", "BrakePedal", 0))
-
+      #vp
+      signals.append(("ACC_Speed", "ACC_Speed_ID", 0))
+      
       # Servo
       signals.append(("SteeringWheelRateOfChange", "PSCM1", 0))
  
@@ -340,7 +355,9 @@ class CarState(CarStateBase):
       # Checks
       checks.append(("AccPedal", 100))
       checks.append(("BrakePedal", 50))
-
+      #vp
+      checks.append(("ACC_Speed_ID", 10))
+    
     return CANParser(DBC[CP.carFingerprint]['pt'], signals, checks, 0)
 
   @staticmethod
@@ -400,6 +417,8 @@ class CarState(CarStateBase):
       signals.append(("ACCStatus", "FSM0", 0))
       #vp
       signals.append(("TSR_Speed", "FSM5", 0))
+      signals.append(("ACC_Pause", "FSM3", 0))
+      signals.append(("ACC_Tracking", "FSM1", 0))
 
       # LKA Request
       signals.append(("TrqLim", "FSM2", 0x80))
@@ -415,7 +434,8 @@ class CarState(CarStateBase):
       checks.append(('FSM0', 100))
       checks.append(('FSM2', 50))
       #vp
-      checks.append(("FSM5", 10))
-
+      checks.append(("FSM5", 50))
+      checks.append(("FSM3", 50))
+      checks.append(("FSM1", 50))
 
     return CANParser(DBC[CP.carFingerprint]['pt'], signals, checks, 2)
