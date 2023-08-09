@@ -34,6 +34,7 @@ class PSCMInfo():
      self.accStatus = 0
      self.accpause = 0
      self.acctracking = 0
+     self.lkaanglereq = 0
 
 class FSMInfo():
   def __init__(self):
@@ -153,9 +154,6 @@ class CarState(CarStateBase):
     
     elif self.CP.carFingerprint in PLATFORM.EUCD:
       accStatus = cp_cam.vl["FSM0"]['ACCStatus']
-      #vp
-      ret.cruiseState.speedLimit = cp_cam.vl["FSM5"]['TSR_Speed'] * CV.KPH_TO_MS
-      ret.cruiseState.speed = cp_cam.vl["FSM5"]['TSR_Speed'] * CV.KPH_TO_MS
       
       if accStatus == 2:
         # Acc in ready mode
@@ -175,12 +173,7 @@ class CarState(CarStateBase):
     ret.cruiseActualEnabled = ret.cruiseState.enabled
     ret.accpause = bool(cp_cam.vl["FSM3"]['ACC_Pause'])
     ret.acctracking = int(cp_cam.vl["FSM1"]['ACC_Tracking'])
-
-    # Alert during traffic jam when car ahead is moving TODO
-    if ret.cruiseState.enabled and ret.accpause and ret.vEgo < 0.1 and ret.acctracking > 4:
-      print("VP_DEBUG"," Cruise State=",ret.cruiseState.enabled," ACC Pause=",ret.accpause," Speed=",ret.vEgo," ACC Distance=",ret.acctracking)
-      #events.add(EventName.promptDriverDistracted)
-      #cloudlog.warning("TEST")
+    ret.lkaanglereq = float(cp_cam.vl['FSM2']['LKAAngleReq'])
     
     # Button and blinkers.
     self.buttonStates['altButton1'] = bool(cp.vl["CCButtons"]['ACCOnOffBtn'])
