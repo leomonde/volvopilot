@@ -102,6 +102,14 @@ class CarInterface(CarInterfaceBase):
 
     #vp
     ret.steeringRateLimited = self.CC.steer_rate_limited
+    events = self.create_common_events(ret)
+    #If max LKA torque is reached and diff from angle request and steer angle is greather than 12 degrees, alert the driver
+    if abs(ret.steeringTorque) >= 49 and abs(ret.lkaanglereq-ret.steeringAngleDeg) >= 12:
+      events.add(EventName.steerSaturated)
+    #If in traffic jam ACC is in pause and ahead car start moving, alert the driver
+    if ret.cruiseState.enabled and ret.accpause and ret.vEgo < 0.1 and ret.acctracking > 4:
+      events.add(EventName.laneChangeBlocked)
+    ret.events = events.to_msg()
 
     # Check for and process state-change events (button press or release) from
     # the turn stalk switch or ACC steering wheel/control stalk buttons.
@@ -112,15 +120,6 @@ class CarInterface(CarInterfaceBase):
         be.pressed = self.CS.buttonStates[button]
         buttonEvents.append(be)
 
-    # Engagement and longitudinal control using stock ACC. Make sure OP is
-    # disengaged if stock ACC is disengaged.
-    #if not ret.cruiseState.enabled:
-    #  events.add(EventName.)
-    # Attempt OP engagement only on rising edge of stock ACC engagement.
-    #elif not self.cruiseState_enabled_prev:
-    #  events.add(EventName.)
-
-    ret.events = self.create_common_events(ret).to_msg()
     ret.buttonEvents = buttonEvents
     #ret.canMonoTimes = canMonoTimes
 
