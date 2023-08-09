@@ -209,8 +209,9 @@ struct CarState {
   distanceLines @42 :UInt8;
 
   #vp
-  acctracking @43 : UInt8;
+  acctracking @43 :UInt8;
   accpause @44 :Bool;
+  lkaanglereq @45 :Float32;
 
   struct WheelSpeeds {
     # optional wheel speeds
