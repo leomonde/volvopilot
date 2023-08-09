@@ -30,11 +30,11 @@ class PSCMInfo():
     # EUCD
     self.SteeringWheelRateOfChange = 0
 
-     #vp
-     self.accStatus = 0
-     self.accpause = 0
-     self.acctracking = 0
-     self.lkaanglereq = 0
+    #vp
+    self.accStatus = 0
+    self.accpause = 0
+    self.acctracking = 0
+    self.lkaanglereq = 0
 
 class FSMInfo():
   def __init__(self):
