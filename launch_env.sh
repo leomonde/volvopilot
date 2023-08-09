@@ -20,6 +20,9 @@ fi
 
 export STAGING_ROOT="/data/safe_staging"
 
+#optional
+#export FINGERPRINT="VOLVO V60 2015"
+
 # Set system date equal to last date of recording, in case of no network to sync time
 
 ls /data/media/0/realdata/ > /tmp/rec_list.tmp
