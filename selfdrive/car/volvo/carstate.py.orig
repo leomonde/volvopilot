@@ -32,6 +32,7 @@ class PSCMInfo():
 
     #vp
     self.accStatus = 0
+    self.accpause = 0
     self.acctracking = 0
     self.lkaanglereq = 0
 
@@ -168,10 +169,9 @@ class CarState(CarStateBase):
         ret.cruiseState.enabled = False
 
     #vp
-    ret.cruiseState.speedLimit = cp_cam.vl["FSM5"]['TSR_Speed'] * CV.KPH_TO_MS
-    ret.cruiseState.speed = cp.vl["ACC_Speed"]['ACC_Speed'] * CV.KPH_TO_MS
+    ret.cruiseState.speed = cp_cam.vl["FSM5"]['TSR_Speed'] * CV.KPH_TO_MS
     ret.cruiseActualEnabled = ret.cruiseState.enabled
-    ret.cruiseState.standstill = bool(cp_cam.vl["FSM3"]['ACC_Standstill'])
+    ret.accpause = bool(cp_cam.vl["FSM3"]['ACC_Pause'])
     ret.acctracking = int(cp_cam.vl["FSM1"]['ACC_Tracking'])
     ret.lkaanglereq = float(cp_cam.vl['FSM2']['LKAAngleReq'])
     
@@ -331,7 +331,7 @@ class CarState(CarStateBase):
       signals.append(("AccPedal", "AccPedal", 0))
       signals.append(("BrakePedal", "BrakePedal", 0))
       #vp
-      signals.append(("ACC_Speed", "ACC_Speed", 0))
+      signals.append(("ACC_Speed", "ACC_Speed_ID", 0))
       
       # Servo
       signals.append(("SteeringWheelRateOfChange", "PSCM1", 0))
@@ -349,7 +349,7 @@ class CarState(CarStateBase):
       checks.append(("AccPedal", 100))
       checks.append(("BrakePedal", 50))
       #vp
-      checks.append(("ACC_Speed", 50))
+      checks.append(("ACC_Speed_ID", 10))
     
     return CANParser(DBC[CP.carFingerprint]['pt'], signals, checks, 0)
 
@@ -410,7 +410,7 @@ class CarState(CarStateBase):
       signals.append(("ACCStatus", "FSM0", 0))
       #vp
       signals.append(("TSR_Speed", "FSM5", 0))
-      signals.append(("ACC_Standstill", "FSM3"))
+      signals.append(("ACC_Pause", "FSM3", 0))
       signals.append(("ACC_Tracking", "FSM1", 0))
 
       # LKA Request

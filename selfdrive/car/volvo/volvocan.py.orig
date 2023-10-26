@@ -14,46 +14,6 @@ def cancelACC(packer, car_fingerprint, CS):
 
   return packer.make_can_msg("CCButtons", 0, msg)
 
-#vp
-def onoffACC(packer, car_fingerprint, CS, bus):
-  msg = {
-    "ACCOnOffBtn" : 1,
-    "ACCOnOffBtnInv" : 0,
-  }
-  return packer.make_can_msg("CCButtons", bus, msg)
-
-def resumeACC(packer, car_fingerprint, CS, bus):
-  msg = {
-    "ACCResumeBtn" : 1,
-    "ACCResumeBtnInv" : 0,
-  }
-  return packer.make_can_msg("CCButtons", bus, msg)
-
-def plusACC(packer, car_fingerprint, CS, bus):
-  msg = {
-    "ACCSetBtn" : 1,
-    "ACCSetBtnInv" : 0,
-  }
-  return packer.make_can_msg("CCButtons", bus, msg)
-
-def minusACC(packer, car_fingerprint, CS, bus):
-  msg = {
-    "ACCMinusBtn" : 1,
-    "ACCMinusBtnInv" : 0,
-  }
-  return packer.make_can_msg("CCButtons", bus, msg)
-
-def checkACC(packer, car_fingerprint, CS, bus):
-  msg = {
-    "ACC_Check" : 1,
-  }
-  return packer.make_can_msg("FSM3", bus, msg)
-
-def standstillACC(packer, car_fingerprint, CS, bus):
-  msg = {
-    "ACC_Standstill" : 0,
-  }
-  return packer.make_can_msg("FSM3", bus, msg)
 
 def manipulateServo(packer, car_fingerprint, CS):
   # Manipulate data from servo to FSM

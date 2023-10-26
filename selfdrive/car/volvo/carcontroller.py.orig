@@ -4,7 +4,6 @@ from selfdrive.car.volvo import volvocan
 from opendbc.can.packer import CANPacker
 from collections import deque
 from common.dp_common import common_controller_ctrl
-from common.realtime import DT_CTRL
 
 class SteerCommand:
   angle_request = 0
@@ -77,8 +76,7 @@ class CarController():
 
     #vp
     self.steer_rate_limited = False
-    self.last_resume_frame = 0
-
+    
   def max_angle_req(self, current_steer_angle, angle_request_prev, CCP):
     """ 
     Calculate maximum angle request delta/offset from current steering angle. 
@@ -234,20 +232,11 @@ class CarController():
     #                                     blinker_on or frame < self.blinker_end_frame,
     #                                     apply_steer, CS.out.vEgo)
     #self.last_blinker_on = blinker_on
-
+    
     # Cancel ACC if engaged when OP is not.
     if not enabled and CS.out.cruiseState.enabled:
       can_sends.append(volvocan.cancelACC(self.packer, self.CP.carFingerprint, CS))
 
-    #vp resume
-    if enabled and CS.out.cruiseState.standstill and CS.out.vEgo < 0.1 and CS.out.acctracking > 3:
-      # send resume at a max freq of 10Hz
-      if (frame - self.last_resume_frame) * DT_CTRL > 0.10:
-        # send 25 messages at a time to increases the likelihood of resume being accepted
-        can_sends.extend([volvocan.resumeACC(self.packer, self.CP.carFingerprint, CS, 0)] * 25)
-        can_sends.extend([volvocan.checkACC(self.packer, self.CP.carFingerprint, CS, 0)] * 25)
-        if (frame - self.last_resume_frame) * DT_CTRL >= 0.15:
-          self.last_resume_frame = frame
 
     # Send diagnostic requests
     if(self.doDTCRequests):
