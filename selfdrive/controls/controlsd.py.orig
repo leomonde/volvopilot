@@ -534,7 +534,7 @@ class Controls:
 
         steer = clip(self.sm['testJoystick'].axes[1], -1, 1)
         # max angle is 45 for angle-based cars
-        actuators.steer, actuators.steeringAngleDeg = steer, steer * 90.
+        actuators.steer, actuators.steeringAngleDeg = steer, steer * 45.
 
         lac_log.active = True
         lac_log.steeringAngleDeg = CS.steeringAngleDeg
