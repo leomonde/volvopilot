@@ -78,6 +78,8 @@ class CarController():
     #vp
     self.steer_rate_limited = False
     self.last_resume_frame = 0
+    self.distance = 0
+    self.waiting = False
 
   def max_angle_req(self, current_steer_angle, angle_request_prev, CCP):
     """ 
@@ -240,14 +242,19 @@ class CarController():
       can_sends.append(volvocan.cancelACC(self.packer, self.CP.carFingerprint, CS))
 
     #vp resume
-    if enabled and CS.out.cruiseState.standstill and CS.out.vEgo < 0.1 and CS.out.acctracking > 3:
-      # send resume at a max freq of 10Hz
-      if (frame - self.last_resume_frame) * DT_CTRL > 0.10:
+    # send resume at a max freq of 5Hz
+    if (frame - self.last_resume_frame) * DT_CTRL > 0.10:
+      if enabled and CS.out.cruiseState.standstill and CS.out.vEgo < 0.01 and not self.waiting:
+        self.distance = CS.out.acctracking
+        self.waiting = True
+      if enabled and CS.out.cruiseState.standstill and CS.out.vEgo < 0.01 and self.waiting and CS.out.acctracking > self.distance:
         # send 25 messages at a time to increases the likelihood of resume being accepted
         can_sends.extend([volvocan.resumeACC(self.packer, self.CP.carFingerprint, CS, 0)] * 25)
         can_sends.extend([volvocan.checkACC(self.packer, self.CP.carFingerprint, CS, 0)] * 25)
-        if (frame - self.last_resume_frame) * DT_CTRL >= 0.15:
+        if (frame - self.last_resume_frame) * DT_CTRL >= 0.20:
           self.last_resume_frame = frame
+      if not CS.out.cruiseState.standstill and self.waiting:
+        self.waiting = False
 
     # Send diagnostic requests
     if(self.doDTCRequests):
